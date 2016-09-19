@@ -96,7 +96,17 @@ module PermanentRecords
           record.save!
         end
 
+        # Perform the equivalent of
+        # ActiveRecord::AttributeMethods::Dirty#changes_applied
+        if ::ActiveRecord::VERSION::MAJOR >= 5
+          @previous_mutation_tracker = record.send(:previous_mutation_tracker)
+        elsif ::ActiveRecord::VERSION::MAJOR >= 4
+          @previously_changed = record.instance_variable_get('@previously_changed')
+        end
+
+        @changed_attributes = HashWithIndifferentAccess.new
         @attributes = record.instance_variable_get('@attributes')
+        @mutation_tracker = nil
       rescue => e
         # trigger dependent record destruction (they were revived before this
         # record, which cannot be revived due to validations)

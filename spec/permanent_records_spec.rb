@@ -39,6 +39,10 @@ describe PermanentRecords do
       expect(subject.size).to be_nil if record.respond_to?(:size)
     end
 
+    it 'tracks the change to deleted_at attribute' do
+      subject.previous_changes.keys.should include('deleted_at')
+    end
+
     context 'with force argument set to truthy' do
       let(:should_force) { :force }
 
