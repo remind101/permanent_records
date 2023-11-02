@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gemspec
+
 ver = ENV['AR_TEST_VERSION']
 ver = ver.dup.chomp if ver
 
