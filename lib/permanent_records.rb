@@ -99,7 +99,7 @@ module PermanentRecords
         # Perform the equivalent of
         # ActiveRecord::AttributeMethods::Dirty#changes_applied
         if ::ActiveRecord::VERSION::MAJOR >= 5
-          @previous_mutation_tracker = record.send(:previous_mutation_tracker)
+          @previous_changes = record.send(:previous_changes)
         elsif ::ActiveRecord::VERSION::MAJOR >= 4
           @previously_changed = record.instance_variable_get('@previously_changed')
         end
