@@ -34,6 +34,15 @@ module PermanentRecords
       end
     end
 
+    # Rails 5.2 aborts a parent's has_one dependent: :destroy unless the child
+    # reports destroyed?, but a soft deleted record never is. Report it as
+    # destroyed when it was soft deleted as a dependent of its parent.
+    if ::ActiveRecord.gem_version >= Gem::Version.new('5.2')
+      def destroyed?
+        super || (is_permanent? && deleted? && !destroyed_by_association.nil?)
+      end
+    end
+
     def revive(options = nil)
       with_transaction_returning_status do
         if PermanentRecords.should_revive_parent_first?(options)
